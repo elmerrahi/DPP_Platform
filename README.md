@@ -4,24 +4,33 @@ The Digital Product Passport (DPP) Platform is an innovative SaaS solution desig
 ## Project Structure
 
 ```
-frontend/
-  src/
-    components/
-    pages/
-    styles/
-    utils/
-backend/
-  app/
-    api/
-      v1/
-    core/
-    db/
-    models/
-    schemas/
-  ai/
-    models/
-  tests/
+.
+|-- backend/                 # FastAPI service
+|   |-- app/
+|   |   |-- api/
+|   |   |   `-- v1/           # API routes (versioned)
+|   |   |-- core/             # Settings, security, shared utils
+|   |   |-- db/               # DB session, migrations, init
+|   |   |-- models/           # ORM models
+|   |   `-- schemas/          # Pydantic request/response schemas
+|   |-- ai/
+|   |   `-- models/           # AI-related artifacts (placeholder)
+|   `-- tests/                # Backend tests
+|-- frontend/                 # React app
+|   `-- src/
+|       |-- components/       # Reusable UI components
+|       |-- pages/            # Route-level pages
+|       |-- styles/           # Global styles, themes
+|       `-- utils/            # Helpers and utilities
+|-- docker-compose.yml        # Local services (Postgres)
+|-- PROJECT_LOG.txt           # Project notes/logs
+`-- README.md                 # You are here
 ```
+
+Notes:
+- All backend routes are under `backend/app/api/v1`.
+- Frontend talks to the backend at `http://localhost:8000` by default.
+
 
 ## Frontend (React)
 
@@ -92,31 +101,29 @@ curl -H "X-Admin-Token: change-me-admin" http://localhost:8000/api/v1/admin/user
 ```
 
 
-Here’s the normal end‑to‑end flow map for sign‑up and sign‑in in this project:
+Here is the normal end-to-end flow map for sign-up and sign-in in this project:
 
 Sign up
+1. User fills form in the frontend.
+2. Frontend sends POST http://localhost:8000/api/v1/auth/register.
+3. FastAPI validates input with Pydantic.
+4. Backend checks Postgres for existing email.
+5. Backend hashes password and creates user row.
+6. Backend returns { access_token, user }.
+7. Frontend stores token + user in localStorage.
+8. Frontend redirects to /dashboard.
 
-User fills form in the frontend.
-Frontend sends POST http://localhost:8000/api/v1/auth/register.
-FastAPI validates input with Pydantic.
-Backend checks Postgres for existing email.
-Backend hashes password and creates user row.
-Backend returns { access_token, user }.
-Frontend stores token + user in localStorage.
-Frontend redirects to /dashboard.
 Sign in
+1. User fills form in the frontend.
+2. Frontend sends POST http://localhost:8000/api/v1/auth/login.
+3. Backend finds user by email.
+4. Backend verifies password hash.
+5. Backend returns { access_token, user }.
+6. Frontend stores token + user in localStorage.
+7. Frontend redirects to /dashboard.
 
-User fills form in the frontend.
-Frontend sends POST http://localhost:8000/api/v1/auth/login.
-Backend finds user by email.
-Backend verifies password hash.
-Backend returns { access_token, user }.
-Frontend stores token + user in localStorage.
-Frontend redirects to /dashboard.
 Dashboard access
-
-Frontend sends GET http://localhost:8000/api/v1/users/dashboard with Authorization: Bearer <token>.
-Backend validates token and loads user.
-Backend returns dashboard JSON.
-Frontend renders dashboard.
-If you want, I can also diagram it with boxes/arrows or add the exact API payload examples.
+1. Frontend sends GET http://localhost:8000/api/v1/users/dashboard with Authorization: Bearer <token>.
+2. Backend validates token and loads user.
+3. Backend returns dashboard JSON.
+4. Frontend renders dashboard.
