@@ -1,0 +1,264 @@
+.landing {
+  display: grid;
+  gap: 3rem;
+}
+
+.landing-hero {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.hero-copy h1 {
+  font-size: clamp(2.5rem, 4vw, 3.5rem);
+  color: var(--deep);
+}
+
+.hero-lead {
+  font-size: 1.1rem;
+}
+
+.hero-logos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin: 1.2rem 0 1.5rem;
+}
+
+.logo-badge {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(36, 28, 59, 0.08);
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #4a316e;
+  box-shadow: 0 10px 22px rgba(92, 63, 126, 0.12);
+  animation: floatBadge 2.6s ease-in-out infinite;
+}
+
+.logo-badge:nth-child(2) {
+  animation-delay: 0.4s;
+}
+
+.logo-badge:nth-child(3) {
+  animation-delay: 0.8s;
+}
+
+.sdg-strip {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.sdg-card {
+  background: linear-gradient(145deg, rgba(255, 232, 137, 0.9), rgba(255, 209, 230, 0.9));
+  border-radius: 18px;
+  padding: 0.8rem 1rem;
+  display: grid;
+  gap: 0.3rem;
+  box-shadow: 0 14px 28px rgba(92, 63, 126, 0.16);
+  animation: sdgRise 0.9s ease forwards;
+  opacity: 0;
+}
+
+.sdg-label {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #5a2f7d;
+}
+
+.sdg-title {
+  font-weight: 600;
+  color: var(--deep);
+}
+
+.eyebrow {
+  letter-spacing: 0.2rem;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: #6f4c93;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin: 1.5rem 0 2rem;
+}
+
+.hero-highlights {
+  display: grid;
+  gap: 1.5rem;
+  animation: fadeIn 1s ease forwards;
+}
+
+.hero-highlights div {
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 20px;
+  padding: 1rem 1.2rem;
+  box-shadow: 0 15px 30px rgba(92, 63, 126, 0.12);
+}
+
+.hero-card {
+  background: linear-gradient(160deg, var(--purple), var(--pink));
+  border-radius: 28px;
+  padding: 2rem;
+  color: var(--deep);
+  box-shadow: var(--shadow);
+  display: grid;
+  gap: 1.5rem;
+  transform: rotate(-1deg);
+  animation: floatIn 1s ease;
+}
+
+.hero-side {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.chatbot-panel {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 24px;
+  padding: 1.5rem;
+  box-shadow: 0 16px 30px rgba(70, 40, 105, 0.12);
+  display: grid;
+  gap: 1rem;
+}
+
+.chatbot-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chatbot-messages {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 18px;
+  padding: 1rem;
+  display: grid;
+  gap: 0.8rem;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.chatbot-bubble {
+  padding: 0.7rem 0.9rem;
+  border-radius: 16px;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.chatbot-bubble.bot {
+  background: rgba(215, 195, 255, 0.7);
+  align-self: start;
+}
+
+.chatbot-bubble.user {
+  background: rgba(255, 232, 137, 0.85);
+  align-self: end;
+}
+
+.chatbot-form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.8rem;
+}
+
+.chatbot-form input {
+  border-radius: 14px;
+  border: 1px solid rgba(42, 35, 66, 0.2);
+  padding: 0.7rem 0.9rem;
+}
+
+.card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-title {
+  font-weight: 600;
+  margin: 0;
+}
+
+.pill {
+  background: var(--white);
+  padding: 0.25rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.card-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.landing-flow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.flow-item {
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 24px;
+  box-shadow: 0 14px 28px rgba(65, 41, 93, 0.12);
+  animation: fadeIn 1s ease;
+}
+
+.flow-item span {
+  font-weight: 700;
+  color: #6f4c93;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floatIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) rotate(-4deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(-1deg);
+  }
+}
+
+@keyframes sdgRise {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floatBadge {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}

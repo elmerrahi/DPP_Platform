@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: dpp-postgres
+    environment:
+      POSTGRES_DB: dpp_platform
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - dpp_pgdata:/var/lib/postgresql/data
+volumes:
+  dpp_pgdata:

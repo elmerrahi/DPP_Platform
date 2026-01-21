@@ -1,0 +1,47 @@
+Project Stage Log - DPP Platform
+
+Quick Access Commands (share with the team)
+- Frontend dev server:
+  - cd frontend
+  - npm install
+  - npm run dev
+- Backend dev server:
+  - cd backend
+  - .venv\Scripts\activate
+  - pip install -r requirements.txt
+  - python -m uvicorn app.main:app --reload
+- Backend API docs:
+  - http://127.0.0.1:8000/docs
+- Seed test user:
+  - cd backend
+  - python scripts/seed_user.py --email test@test.com --password test1234
+
+[2026-01-21 13:43] Frontend scaffolding completed
+- Created Vite + React setup (package.json, vite.config.js, index.html, src/main.jsx)
+- Added routing in src/App.jsx for landing, sign-in, sign-up, dashboard, DPP create, audit
+- Built UI components in src/components (Header, Footer, LandingPage, SignInForm, SignUpForm, DppForm, AuditResults, UserDashboard)
+- Added pages in src/pages to wrap each component
+- Implemented API helper in src/utils/api.js for auth, DPP creation, audit upload
+- Created stylesheets in src/styles for main theme, landing layout, forms, and buttons
+- Applied branding copy for Yonk AI Leaders and Bicep across landing and auth
+
+[2026-01-21 13:43] Backend scaffolding completed
+- Created FastAPI app entry in backend/app/main.py with CORS and health endpoint
+- Added JWT security helpers in backend/app/core/security.py
+- Added config defaults in backend/app/core/config.py
+- Added SQLAlchemy base/session in backend/app/db/base.py and backend/app/db/session.py
+- Added database models in backend/app/db/models.py for User + DPP with JSONB payload
+- Added Pydantic schemas in backend/app/schemas/dpp_schema.py
+- Added auth routes in backend/app/api/v1/auth.py (register, login)
+- Added DPP routes in backend/app/api/v1/dpp_creation.py (create, list)
+- Added audit route in backend/app/api/v1/audit.py (file upload)
+- Added AI placeholders in backend/ai/models (compliance_model.py, transformer_model.py)
+- Added basic test in backend/tests/test_dpp.py for health check
+- Added requirements in backend/requirements.txt
+- Created package __init__.py files for module discovery
+
+[2026-01-21 13:43] Documentation updated
+- Extended README.md with project structure and run instructions for frontend/back-end
+
+[2026-01-21 13:43] Backend import fix
+- Updated audit route import to use top-level ai package path

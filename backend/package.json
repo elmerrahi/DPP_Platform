@@ -1,0 +1,31 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Backend for Digital Product Passport platform",
+  "main": "app.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elmerrahi/DPP_Platform.git"
+  },
+  "keywords": [
+    "digital-product-passport",
+    "compliance",
+    "AI",
+    "backend"
+  ],
+  "author": "Oussama Elmerrahi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/elmerrahi/DPP_Platform/issues"
+  },
+  "homepage": "https://github.com/elmerrahi/DPP_Platform#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}

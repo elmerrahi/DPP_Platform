@@ -1,0 +1,117 @@
+.auth-form,
+.dpp-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.auth-form label,
+.dpp-form label {
+  display: grid;
+  gap: 0.4rem;
+  font-weight: 500;
+}
+
+.auth-form input,
+.dpp-form input {
+  padding: 0.75rem 1rem;
+  border-radius: 16px;
+  border: 1px solid rgba(42, 35, 66, 0.2);
+  font-size: 1rem;
+}
+
+.form-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.form-message {
+  font-size: 0.9rem;
+  color: #6b2c88;
+}
+
+.audit-panel {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.audit-card,
+.audit-results {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 24px;
+  padding: 1.5rem;
+  box-shadow: 0 16px 30px rgba(70, 40, 105, 0.12);
+}
+
+.audit-card form {
+  display: grid;
+  gap: 1rem;
+}
+
+.results-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.results-grid div {
+  background: var(--yellow);
+  border-radius: 18px;
+  padding: 0.8rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.results-empty {
+  color: rgba(42, 35, 66, 0.6);
+}
+
+.dashboard {
+  display: grid;
+  gap: 2rem;
+}
+
+.dashboard-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.dashboard-card {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 12px 24px rgba(70, 40, 105, 0.1);
+}
+
+.dashboard-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.dashboard-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.dashboard-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.2rem;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.auth-choice {
+  display: grid;
+  gap: 2rem;
+}
+
+.auth-choice-grid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
