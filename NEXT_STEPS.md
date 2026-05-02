@@ -3,6 +3,10 @@
 > **Audience:** Young AI Leaders – French Hub volunteers contributing to DPP_Platform.
 > **Last updated:** 2026-05-02
 > **Status:** Living document — update as priorities shift.
+>
+> **Progress:** Priority 3 (`.gitignore` + secrets) and Priority 5 (`CONTRIBUTING.md`)
+> are done. Priority 1 (battery DPP schema) is in progress on branch
+> `feat/battery-dpp-schema`.
 
 This document is a pragmatic prioritization plan calibrated for the project's
 real constraints: **zero monetary budget**, **volunteer part-time effort**,
@@ -62,7 +66,7 @@ onboarding friction will kill the project faster than any missing feature.
 
 ## Top 5 priorities (this quarter)
 
-### Priority 1 — Pick ONE product category and lock its DPP schema *(this week)*
+### Priority 1 — Pick ONE product category and lock its DPP schema *(IN PROGRESS — branch `feat/battery-dpp-schema`)*
 
 The single highest-leverage decision available. `docs/4- Référentiel réglementaire.pdf`
 lists multiple categories (Textiles, Batteries, Electronics) — building for
@@ -96,7 +100,7 @@ This is the smallest demoable unit of value and the only way to start
 getting feedback from anyone (compliance officer, manufacturer, fellow
 association member) outside the dev team.
 
-### Priority 3 — `.gitignore` + secrets hygiene *(today, ~1 hour)*
+### Priority 3 — `.gitignore` + secrets hygiene *(DONE — commit 978251d on main)*
 
 The repo currently has **no `.gitignore`**. Combined with default secrets
 in `backend/app/core/config.py` (`jwt_secret = "change-me"`,
@@ -161,7 +165,7 @@ Wire it to the existing `/audit` endpoint and the `AuditResults` frontend
 component. Then you have: create DPP → check DPP → see compliance report.
 **That's a usable product**, even without AI.
 
-### Priority 5 — `CONTRIBUTING.md` and 30-minute onboarding *(this week, ~1 day)*
+### Priority 5 — `CONTRIBUTING.md` and 30-minute onboarding *(DONE — commit 6c34627 on main)*
 
 Volunteer projects fail at the onboarding step. Recent setup of this repo
 took ~2 hours because of port conflicts, Python 3.13 wheel gaps, miniconda

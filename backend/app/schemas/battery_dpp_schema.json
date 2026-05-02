@@ -1,0 +1,832 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/elmerrahi/DPP_Platform/schemas/battery_dpp/v0.1.0",
+  "title": "EU Battery Digital Product Passport",
+  "description": "JSON Schema for Battery Digital Product Passports under Regulation (EU) 2023/1542 (the Battery Regulation), aligned with Battery Pass Consortium content guidance v1.1 (Dec 2023). Applies to: LMT batteries, industrial batteries > 2 kWh, and electric vehicle batteries (the three DPP-mandated categories per Article 77). Portable and SLI batteries are excluded from DPP requirements and not modeled here. The full per-field regulatory mapping lives in regulatory_references.md alongside this file.",
+  "version": "0.1.0",
+  "x-regulatory-source": {
+    "regulation": "Regulation (EU) 2023/1542 of the European Parliament and of the Council of 12 July 2023 concerning batteries and waste batteries",
+    "regulation_url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32023R1542",
+    "primary_articles": ["Article 77", "Annex XIII"],
+    "dpp_categories": ["LMT", "INDUSTRIAL_OVER_2KWH", "EV"],
+    "dpp_application_date": "2027-02-18",
+    "reference_document": "Battery Pass Consortium — Battery Passport Content Guidance v1.1 (December 2023). NOTE: this version was superseded by DIN-DKE-SPEC 99100 in January 2025; field labels may have shifted slightly in newer versions. See regulatory_references.md for reconciliation status.",
+    "reference_url": "https://thebatterypass.eu/"
+  },
+  "x-access-levels": {
+    "public": "Accessible to the general public per Annex XIII point 1",
+    "notified-bodies": "Accessible only to notified bodies, market surveillance authorities, and the European Commission per Annex XIII points 2 and 3",
+    "legitimate-interest": "Accessible to any natural or legal person with a legitimate interest per Annex XIII points 2 and 4"
+  },
+  "type": "object",
+  "required": [
+    "general_info",
+    "compliance",
+    "supply_chain_due_diligence"
+  ],
+  "properties": {
+    "general_info": {
+      "type": "object",
+      "title": "General battery and manufacturer information",
+      "description": "Section 6.1 of Battery Pass guidance — Annex XIII point 1(a) referencing Annex VI Part A.",
+      "required": [
+        "battery_passport_identification",
+        "battery_identification",
+        "manufacturer_identification",
+        "manufacturing_place",
+        "manufacturing_date",
+        "battery_category",
+        "battery_weight",
+        "battery_status"
+      ],
+      "properties": {
+        "battery_passport_identification": {
+          "type": "string",
+          "title": "Battery passport identification",
+          "label_fr": "Identifiant du passeport de batterie",
+          "description": "Unique identifier of the individual battery passport. Must comply with ISO/IEC 15459 (or equivalent) per Article 77(3). Linked to the QR code on the battery.",
+          "pattern": "^[A-Za-z0-9._:\\-/]{1,128}$",
+          "x-regulatory-source": "Article 77(3)",
+          "x-data-access": "public",
+          "x-mandatory": true
+        },
+        "battery_identification": {
+          "type": "object",
+          "title": "Battery identification",
+          "label_fr": "Identification de la batterie",
+          "description": "Identifies the individual battery via model + batch or serial number per Article 38(6).",
+          "x-regulatory-source": "Annex XIII 1(a) → Annex VI Part A(1) → Article 38(6)",
+          "x-data-access": "public",
+          "x-mandatory": true,
+          "required": ["model_identification"],
+          "properties": {
+            "model_identification": {
+              "type": "string",
+              "label_fr": "Identification du modèle",
+              "description": "Model identifier of the battery."
+            },
+            "serial_number": {
+              "type": "string",
+              "label_fr": "Numéro de série",
+              "description": "Individual serial number — required if no batch_number or product_number is supplied."
+            },
+            "batch_number": {
+              "type": "string",
+              "label_fr": "Numéro de lot",
+              "description": "Production batch number — alternative to serial_number per Article 38(6)."
+            },
+            "product_number": {
+              "type": "string",
+              "label_fr": "Numéro de produit",
+              "description": "Product number — alternative to serial/batch."
+            }
+          },
+          "anyOf": [
+            { "required": ["serial_number"] },
+            { "required": ["batch_number"] },
+            { "required": ["product_number"] }
+          ]
+        },
+        "manufacturer_identification": {
+          "type": "object",
+          "title": "Manufacturer identification",
+          "label_fr": "Identification du fabricant",
+          "description": "Identifies the battery manufacturer per Article 38(7) and Annex VI Part A(1). Manufacturer is defined in Article 3(33).",
+          "x-regulatory-source": "Annex VI Part A(1); Article 38(7); Article 3(33)",
+          "x-data-access": "public",
+          "x-mandatory": true,
+          "required": ["name", "postal_address"],
+          "properties": {
+            "name": {
+              "type": "string",
+              "label_fr": "Nom",
+              "description": "Manufacturer's legal name."
+            },
+            "trade_name": {
+              "type": "string",
+              "label_fr": "Nom commercial",
+              "description": "Registered trade name or trademark, if any."
+            },
+            "postal_address": {
+              "type": "string",
+              "label_fr": "Adresse postale",
+              "description": "Single postal address with contact point."
+            },
+            "web_address": {
+              "type": "string",
+              "format": "uri",
+              "label_fr": "Site web"
+            },
+            "email": {
+              "type": "string",
+              "format": "email",
+              "label_fr": "Adresse e-mail"
+            },
+            "unique_operator_identifier": {
+              "type": "string",
+              "label_fr": "Identifiant unique d'opérateur",
+              "description": "Unique operator identifier per ESPR Article 2(32) and Battery Reg Article 11(1). Examples: DUNS, GLN, EORI, BIC, LEI, national VAT."
+            }
+          }
+        },
+        "responsible_economic_operator_identification": {
+          "type": "object",
+          "title": "Responsible economic operator identification",
+          "label_fr": "Identification de l'opérateur économique responsable",
+          "description": "Voluntary attribute added by Battery Pass Consortium. The economic operator responsible for the passport per Article 77(4) — may differ from the manufacturer over the battery lifecycle.",
+          "x-regulatory-source": "Battery Pass Consortium recommendation (not mandated by regulation); references Article 77(4)",
+          "x-data-access": "public",
+          "x-mandatory": false,
+          "properties": {
+            "name": { "type": "string", "label_fr": "Nom" },
+            "trade_name": { "type": "string", "label_fr": "Nom commercial" },
+            "postal_address": { "type": "string", "label_fr": "Adresse postale" },
+            "web_address": { "type": "string", "format": "uri", "label_fr": "Site web" },
+            "email": { "type": "string", "format": "email", "label_fr": "Adresse e-mail" },
+            "unique_operator_identifier": { "type": "string", "label_fr": "Identifiant unique d'opérateur" }
+          }
+        },
+        "manufacturing_place": {
+          "type": "object",
+          "title": "Manufacturing place",
+          "label_fr": "Lieu de fabrication",
+          "description": "Geographical location of the battery manufacturing facility per Annex VI Part A(3).",
+          "x-regulatory-source": "Annex VI Part A(3); Annex XIII 1(a)",
+          "x-data-access": "public",
+          "x-mandatory": true,
+          "required": ["country"],
+          "properties": {
+            "country": {
+              "type": "string",
+              "pattern": "^[A-Z]{2}$",
+              "label_fr": "Pays",
+              "description": "ISO 3166-1 alpha-2 country code."
+            },
+            "city": { "type": "string", "label_fr": "Ville" },
+            "street": { "type": "string", "label_fr": "Rue" },
+            "building": { "type": "string", "label_fr": "Bâtiment" },
+            "unique_facility_identifier": {
+              "type": "string",
+              "label_fr": "Identifiant unique d'installation",
+              "description": "Per ESPR Article 2(33). Common examples: GLN, ISO-31661-1 country codes."
+            }
+          }
+        },
+        "manufacturing_date": {
+          "type": "string",
+          "title": "Manufacturing date",
+          "label_fr": "Date de fabrication",
+          "description": "Month and year of battery manufacturing per Annex VI Part A(4). Format: ISO 8601 year-month (YYYY-MM).",
+          "pattern": "^\\d{4}-(0[1-9]|1[0-2])$",
+          "x-regulatory-source": "Annex VI Part A(4)",
+          "x-data-access": "public",
+          "x-mandatory": true
+        },
+        "battery_category": {
+          "type": "string",
+          "title": "Battery category",
+          "label_fr": "Catégorie de batterie",
+          "description": "Intended use of the battery. DPP applies only to LMT, industrial > 2 kWh, and EV categories.",
+          "enum": [
+            "LMT",
+            "INDUSTRIAL_OVER_2KWH",
+            "INDUSTRIAL_STATIONARY_STORAGE_OVER_2KWH",
+            "EV"
+          ],
+          "x-regulatory-source": "Annex VI Part A(2); Article 3",
+          "x-data-access": "public",
+          "x-mandatory": true,
+          "x-enum-labels-fr": {
+            "LMT": "Batterie pour moyens de transport légers",
+            "INDUSTRIAL_OVER_2KWH": "Batterie industrielle (> 2 kWh)",
+            "INDUSTRIAL_STATIONARY_STORAGE_OVER_2KWH": "Système de stockage d'énergie stationnaire (> 2 kWh)",
+            "EV": "Batterie de véhicule électrique"
+          }
+        },
+        "battery_weight": {
+          "type": "object",
+          "title": "Battery weight",
+          "label_fr": "Poids de la batterie",
+          "description": "Mass of the entire battery in kilograms per Annex VI Part A(5). Voluntary granular weights for modules/cells when defined at pack/module level.",
+          "x-regulatory-source": "Annex VI Part A(5); Annex XIII 1(a)",
+          "x-data-access": "public",
+          "x-mandatory": true,
+          "required": ["total_kg"],
+          "properties": {
+            "total_kg": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "label_fr": "Poids total (kg)"
+            },
+            "module_kg": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "label_fr": "Poids du module (kg)",
+              "description": "Voluntary — for batteries defined at pack or module level."
+            },
+            "cell_kg": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "label_fr": "Poids de la cellule (kg)",
+              "description": "Voluntary — for batteries defined at cell level."
+            }
+          }
+        },
+        "battery_status": {
+          "type": "string",
+          "title": "Battery status",
+          "label_fr": "Statut de la batterie",
+          "description": "Current status of the battery in its life cycle. Dynamic — must be updated by the economic operator.",
+          "enum": ["Original", "Repurposed", "Re-used", "Remanufactured", "Waste"],
+          "x-regulatory-source": "Annex XIII 4(c)",
+          "x-data-access": "legitimate-interest",
+          "x-mandatory": true,
+          "x-dynamic": true,
+          "x-enum-labels-fr": {
+            "Original": "Original",
+            "Repurposed": "Reconverti",
+            "Re-used": "Réutilisé",
+            "Remanufactured": "Refabriqué",
+            "Waste": "Déchet"
+          }
+        }
+      }
+    },
+
+    "compliance": {
+      "type": "object",
+      "title": "Compliance, labels, certifications",
+      "description": "Section 6.2 of Battery Pass guidance — Annex XIII point 1(q) and 1(r).",
+      "required": [
+        "separate_collection_symbol_displayed",
+        "labels_meaning",
+        "eu_declaration_of_conformity_id"
+      ],
+      "properties": {
+        "separate_collection_symbol_displayed": {
+          "type": "boolean",
+          "title": "Separate collection symbol displayed",
+          "label_fr": "Symbole de collecte séparée affiché",
+          "description": "WEEE separate-collection symbol mandatory on all batteries from 18 August 2025.",
+          "x-regulatory-source": "Article 13(4) via Annex XIII 1(q)",
+          "x-data-access": "public",
+          "x-mandatory": true
+        },
+        "cadmium_symbol_required": {
+          "type": "boolean",
+          "title": "Cadmium symbol required (Cd > 0.002%)",
+          "label_fr": "Symbole cadmium requis",
+          "description": "True if battery contains more than 0.002% cadmium by weight.",
+          "x-regulatory-source": "Article 13(5) via Annex XIII 1(q)",
+          "x-data-access": "public",
+          "x-mandatory": false,
+          "x-conditional": "Required only if Cd > 0.002%"
+        },
+        "lead_symbol_required": {
+          "type": "boolean",
+          "title": "Lead symbol required (Pb > 0.004%)",
+          "label_fr": "Symbole plomb requis",
+          "description": "True if battery contains more than 0.004% lead by weight.",
+          "x-regulatory-source": "Article 13(5) via Annex XIII 1(q)",
+          "x-data-access": "public",
+          "x-mandatory": false,
+          "x-conditional": "Required only if Pb > 0.004%"
+        },
+        "labels_meaning": {
+          "type": "string",
+          "title": "Meaning of labels and symbols",
+          "label_fr": "Signification des étiquettes et symboles",
+          "description": "Plain-language explanation of all labels/symbols on the battery. Must be in language(s) easily understood by end-users in the Member State where placed on the market.",
+          "x-regulatory-source": "Article 74(1e) via Annex XIII 1(s)",
+          "x-data-access": "public",
+          "x-mandatory": true
+        },
+        "eu_declaration_of_conformity_id": {
+          "type": "string",
+          "title": "ID of EU declaration of conformity",
+          "label_fr": "Identifiant de la déclaration UE de conformité",
+          "description": "Identification number of the EU declaration of conformity drawn up per Article 18.",
+          "x-regulatory-source": "Article 7(1f) via Annex XIII 1(c); Article 18",
+          "x-data-access": "public",
+          "x-mandatory": true
+        },
+        "eu_declaration_of_conformity_url": {
+          "type": "string",
+          "format": "uri",
+          "title": "URL of the signed EU declaration of conformity document",
+          "label_fr": "URL de la déclaration UE de conformité",
+          "description": "URL where the signed declaration document can be retrieved.",
+          "x-regulatory-source": "Article 18 via Annex XIII 1(r)",
+          "x-data-access": "public",
+          "x-mandatory": false
+        },
+        "test_results_compliance_url": {
+          "type": "string",
+          "format": "uri",
+          "title": "Test results compliance documentation",
+          "label_fr": "Résultats des tests de conformité",
+          "description": "Test reports proving compliance per Articles 7-10 and 12-14, accessible to notified bodies and market surveillance authorities.",
+          "x-regulatory-source": "Annex XIII 3",
+          "x-data-access": "notified-bodies",
+          "x-mandatory": false
+        }
+      }
+    },
+
+    "carbon_footprint": {
+      "type": "object",
+      "title": "Battery carbon footprint",
+      "description": "Section 6.3 of Battery Pass guidance — Article 7 + Annex II via Annex XIII 1(c). Required for EV batteries first, then industrial batteries > 2 kWh except those with exclusively external storage. NOT required for LMT batteries in the regulation timeline as of v1.1.",
+      "x-applicability": ["EV", "INDUSTRIAL_OVER_2KWH"],
+      "x-staged-application": "EV batteries: declaration from Feb 2025; performance class from Aug 2026; max threshold from Feb 2028. Industrial batteries: similar timeline shifted later. See Figure 16 in Battery Pass guidance v1.1.",
+      "properties": {
+        "carbon_footprint_kg_co2e_per_kwh": {
+          "type": "number",
+          "minimum": 0,
+          "title": "Carbon footprint as declared (kg CO2e / kWh)",
+          "label_fr": "Empreinte carbone déclarée (kg éq. CO2 / kWh)",
+          "description": "Battery carbon footprint in kg CO2-equivalent per one kWh of total energy provided over expected service life.",
+          "x-regulatory-source": "Article 7(1d)",
+          "x-data-access": "public",
+          "x-mandatory": true
+        },
+        "carbon_footprint_per_lifecycle_stage_pct": {
+          "type": "object",
+          "title": "Carbon footprint share per lifecycle stage (%)",
+          "label_fr": "Empreinte carbone par étape du cycle de vie (%)",
+          "description": "Share of total carbon footprint per lifecycle stage per Annex II point 4.",
+          "x-regulatory-source": "Article 7(1e); Annex II(4) via Annex XIII 1(c)",
+          "x-data-access": "public",
+          "x-mandatory": true,
+          "required": ["raw_material_acquisition_pct", "main_production_pct", "distribution_pct", "eol_recycling_pct"],
+          "properties": {
+            "raw_material_acquisition_pct": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "label_fr": "Acquisition des matières premières et pré-traitement (%)"
+            },
+            "main_production_pct": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "label_fr": "Production principale / fabrication (%)"
+            },
+            "distribution_pct": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "label_fr": "Distribution (%)"
+            },
+            "eol_recycling_pct": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "label_fr": "Fin de vie et recyclage (%)"
+            }
+          },
+          "x-coherence-rule": "raw_material_acquisition_pct + main_production_pct + distribution_pct + eol_recycling_pct should equal 100 (±0.5)"
+        },
+        "carbon_footprint_performance_class": {
+          "type": "string",
+          "title": "Carbon footprint performance class",
+          "label_fr": "Classe de performance de l'empreinte carbone",
+          "description": "Performance class assigned by manufacturing plant per Article 7(2). Effective from 2026 onwards.",
+          "x-regulatory-source": "Article 7(2) via Annex XIII 1(c)",
+          "x-data-access": "public",
+          "x-mandatory": false,
+          "x-mandatory-from": "2026-08-18"
+        },
+        "carbon_footprint_study_url": {
+          "type": "string",
+          "format": "uri",
+          "title": "Link to carbon footprint study",
+          "label_fr": "Lien vers l'étude de l'empreinte carbone",
+          "description": "Web link to a public version of the study supporting the declared CF values.",
+          "x-regulatory-source": "Article 7(1g) via Annex XIII 1(c)",
+          "x-data-access": "public",
+          "x-mandatory": true
+        }
+      }
+    },
+
+    "supply_chain_due_diligence": {
+      "type": "object",
+      "title": "Supply chain due diligence",
+      "description": "Section 6.4 of Battery Pass guidance — Annex XIII 1(d). The due diligence report (per Article 52(3)) is the only mandatory supply chain attribute in the DPP. Voluntary additions per Article 53.",
+      "required": ["due_diligence_report_url"],
+      "properties": {
+        "due_diligence_report_url": {
+          "type": "string",
+          "format": "uri",
+          "title": "Due diligence report URL",
+          "label_fr": "URL du rapport de diligence raisonnable",
+          "description": "Public report covering supply chain due diligence policy, risk management plan, and summary of third-party verification.",
+          "x-regulatory-source": "Annex XIII 1(d); Article 52(3)",
+          "x-data-access": "public",
+          "x-mandatory": true,
+          "x-applicability-threshold": "Operators with net turnover < €40M may be exempt per Article 47"
+        },
+        "third_party_assurances": {
+          "type": "array",
+          "title": "Third-party supply chain assurances",
+          "label_fr": "Assurances tierces de la chaîne d'approvisionnement",
+          "description": "Voluntary additions — certifications of recognized due diligence schemes per Article 53.",
+          "items": {
+            "type": "object",
+            "required": ["scheme_name", "certificate_url"],
+            "properties": {
+              "scheme_name": { "type": "string", "label_fr": "Nom du dispositif" },
+              "certificate_url": { "type": "string", "format": "uri", "label_fr": "URL du certificat" },
+              "valid_from": { "type": "string", "format": "date", "label_fr": "Valide depuis" },
+              "valid_until": { "type": "string", "format": "date", "label_fr": "Valide jusqu'à" }
+            }
+          },
+          "x-regulatory-source": "Article 53 (voluntary)",
+          "x-data-access": "public",
+          "x-mandatory": false
+        }
+      }
+    },
+
+    "materials_composition": {
+      "type": "object",
+      "title": "Battery materials and composition",
+      "description": "Section 6.5 of Battery Pass guidance — Annex XIII 1(b) for public composition; Annex XIII 2(a) for restricted detailed composition.",
+      "required": ["battery_chemistry", "hazardous_substances"],
+      "properties": {
+        "battery_chemistry": {
+          "type": "object",
+          "title": "Battery chemistry",
+          "label_fr": "Composition chimique de la batterie",
+          "description": "Cathode and anode active material plus electrolyte material. Examples: 'Li-NMC/Carbon/LiPF6', 'Lithium-Nickel-Manganese-Cobalt/Carbon/Lithium hexafluorophosphate', or technology-only acronym (Li-ion, NaS, NiMH, SSB).",
+          "x-regulatory-source": "Annex XIII 1(b); Annex VI Part A(7)",
+          "x-data-access": "public",
+          "x-mandatory": true,
+          "required": ["technology"],
+          "properties": {
+            "technology": {
+              "type": "string",
+              "label_fr": "Technologie",
+              "examples": ["Li-ion", "Li-NMC", "LFP", "NaS", "NiMH", "SSB"]
+            },
+            "cathode_active_material": { "type": "string", "label_fr": "Matériau actif cathode" },
+            "anode_active_material": { "type": "string", "label_fr": "Matériau actif anode" },
+            "electrolyte_material": { "type": "string", "label_fr": "Matériau d'électrolyte" }
+          }
+        },
+        "critical_raw_materials": {
+          "type": "array",
+          "title": "Critical raw materials",
+          "label_fr": "Matières premières critiques",
+          "description": "List of EU-classified critical raw materials present above 0.1% by weight in any battery (sub-)component. Reference: EU Critical Raw Materials Act (2023) — 34 materials.",
+          "x-regulatory-source": "Annex XIII 1(b); Annex VI Part A(10)",
+          "x-data-access": "public",
+          "x-mandatory": true,
+          "items": {
+            "type": "object",
+            "required": ["material_name", "weight_pct"],
+            "properties": {
+              "material_name": {
+                "type": "string",
+                "label_fr": "Nom officiel du matériau",
+                "examples": ["Cobalt", "Lithium", "Nickel - battery grade", "Graphite", "Manganese"]
+              },
+              "weight_pct": {
+                "type": "number",
+                "minimum": 0.1,
+                "maximum": 100,
+                "label_fr": "% en poids"
+              },
+              "subcomponent": {
+                "type": "string",
+                "label_fr": "Sous-composant",
+                "description": "Where the material is found (cathode, anode, casing, etc.)"
+              }
+            }
+          }
+        },
+        "detailed_composition_url": {
+          "type": "string",
+          "format": "uri",
+          "title": "Detailed cathode/anode/electrolyte composition (restricted)",
+          "label_fr": "Composition détaillée cathode/anode/électrolyte (accès restreint)",
+          "description": "Detailed material composition data — restricted access. Typically managed via IMDS (automotive) for traceability.",
+          "x-regulatory-source": "Annex XIII 2(a)",
+          "x-data-access": "legitimate-interest",
+          "x-mandatory": false
+        },
+        "hazardous_substances": {
+          "type": "array",
+          "title": "Hazardous substances",
+          "label_fr": "Substances dangereuses",
+          "description": "Substances above 0.1% weight by weight that pose threats to human health or environment, classified per CLP Regulation. SVHCs (substances of very high concern) per REACH must be reported to SCIP database.",
+          "x-regulatory-source": "Annex XIII 1(b); Annex VI Part A(8)",
+          "x-data-access": "public",
+          "x-mandatory": true,
+          "items": {
+            "type": "object",
+            "required": ["substance_name", "weight_pct", "hazard_classes"],
+            "properties": {
+              "substance_name": {
+                "type": "string",
+                "label_fr": "Nom de la substance"
+              },
+              "cas_number": {
+                "type": "string",
+                "pattern": "^\\d{1,7}-\\d{2}-\\d$",
+                "label_fr": "Numéro CAS",
+                "description": "Chemical Abstracts Service registry number."
+              },
+              "weight_pct": {
+                "type": "number",
+                "minimum": 0.1,
+                "maximum": 100,
+                "label_fr": "% en poids"
+              },
+              "hazard_classes": {
+                "type": "array",
+                "items": { "type": "string" },
+                "label_fr": "Classes de danger CLP",
+                "description": "CLP hazard classes/categories (e.g., H300, H301, H400)."
+              },
+              "location_in_battery": {
+                "type": "string",
+                "label_fr": "Localisation dans la batterie"
+              }
+            }
+          }
+        },
+        "substance_impact_statements": {
+          "type": "array",
+          "title": "Impact of substances on environment, health, safety",
+          "label_fr": "Impact des substances sur l'environnement, la santé, la sécurité",
+          "description": "Statements describing impacts of contained substances per applicable hazard classes (e.g., REACH, GHS).",
+          "x-regulatory-source": "Annex XIII 1(s); Article 74(1f)",
+          "x-data-access": "public",
+          "x-mandatory": false,
+          "items": {
+            "type": "object",
+            "required": ["statement"],
+            "properties": {
+              "statement": { "type": "string", "label_fr": "Énoncé d'impact" },
+              "applicable_hazard_class": { "type": "string", "label_fr": "Classe de danger applicable" },
+              "source_framework": {
+                "type": "string",
+                "enum": ["REACH", "GHS", "CLP"],
+                "label_fr": "Cadre de référence"
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "circularity": {
+      "type": "object",
+      "title": "Circularity and resource efficiency",
+      "description": "Section 6.6 of Battery Pass guidance. Mix of public attributes (recycled content, end-of-life info) and restricted (dismantling manuals, spare parts).",
+      "properties": {
+        "removal_manual_url": {
+          "type": "string",
+          "format": "uri",
+          "title": "Manual for removal of the battery from the appliance",
+          "label_fr": "Manuel de retrait de la batterie de l'appareil",
+          "description": "URL to PDF manual covering disassembly sequences, fastening characteristics, tools required, risk warnings, safety measures.",
+          "x-regulatory-source": "Annex XIII 2(c)",
+          "x-data-access": "legitimate-interest",
+          "x-mandatory": true
+        },
+        "disassembly_manual_url": {
+          "type": "string",
+          "format": "uri",
+          "title": "Manual for disassembly and dismantling of the battery pack",
+          "label_fr": "Manuel de démontage et de désassemblage du pack",
+          "description": "URL to PDF manual including exploded diagrams, cell/module dimensions, replaceability, fastener characteristics, fillings/casing info, tools, safety measures.",
+          "x-regulatory-source": "Annex XIII 2(c)",
+          "x-data-access": "legitimate-interest",
+          "x-mandatory": true
+        },
+        "spare_parts_url": {
+          "type": "string",
+          "format": "uri",
+          "title": "Part numbers and contact details for spare parts",
+          "label_fr": "Numéros de pièces et coordonnées des fournisseurs de pièces détachées",
+          "description": "URL to PDF listing component part numbers and addresses (postal/email/web) of spare parts sources.",
+          "x-regulatory-source": "Annex XIII 2(b); Recital 69",
+          "x-data-access": "legitimate-interest",
+          "x-mandatory": true
+        },
+        "safety_instructions_url": {
+          "type": "string",
+          "format": "uri",
+          "title": "Safety measures / instructions",
+          "label_fr": "Mesures de sécurité / instructions",
+          "description": "URL to safety instructions document.",
+          "x-regulatory-source": "Annex XIII 2(d)",
+          "x-data-access": "legitimate-interest",
+          "x-mandatory": true
+        },
+        "extinguishing_agent": {
+          "type": "string",
+          "title": "Usable extinguishing agent",
+          "label_fr": "Agent extincteur recommandé",
+          "description": "Recommended extinguishing agent — should reference standard fire classes (A, B, C, D, K).",
+          "x-regulatory-source": "Annex VI Part A(9)",
+          "x-data-access": "public",
+          "x-mandatory": true
+        },
+        "recycled_content": {
+          "type": "object",
+          "title": "Recycled content shares",
+          "label_fr": "Part de contenu recyclé",
+          "description": "Pre- and post-consumer recycled content for cobalt, lithium, nickel, lead per Article 8 + Annex VIII.",
+          "x-regulatory-source": "Article 8 via Annex XIII 1(c)",
+          "x-data-access": "public",
+          "x-mandatory": false,
+          "x-mandatory-from": "2031-08-18",
+          "properties": {
+            "cobalt_pre_consumer_pct": { "type": "number", "minimum": 0, "maximum": 100, "label_fr": "Cobalt pré-consommation (%)" },
+            "cobalt_post_consumer_pct": { "type": "number", "minimum": 0, "maximum": 100, "label_fr": "Cobalt post-consommation (%)" },
+            "lithium_pre_consumer_pct": { "type": "number", "minimum": 0, "maximum": 100, "label_fr": "Lithium pré-consommation (%)" },
+            "lithium_post_consumer_pct": { "type": "number", "minimum": 0, "maximum": 100, "label_fr": "Lithium post-consommation (%)" },
+            "nickel_pre_consumer_pct": { "type": "number", "minimum": 0, "maximum": 100, "label_fr": "Nickel pré-consommation (%)" },
+            "nickel_post_consumer_pct": { "type": "number", "minimum": 0, "maximum": 100, "label_fr": "Nickel post-consommation (%)" },
+            "lead_pre_consumer_pct": { "type": "number", "minimum": 0, "maximum": 100, "label_fr": "Plomb pré-consommation (%)" },
+            "lead_post_consumer_pct": { "type": "number", "minimum": 0, "maximum": 100, "label_fr": "Plomb post-consommation (%)" }
+          }
+        },
+        "renewable_content_share_pct": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "title": "Renewable content share (%)",
+          "label_fr": "Part de contenu renouvelable (%)",
+          "description": "Share of renewable content per Article 7(1b).",
+          "x-regulatory-source": "Article 7(1b) via Annex XIII 1(c)",
+          "x-data-access": "public",
+          "x-mandatory": false
+        },
+        "end_of_life_info": {
+          "type": "object",
+          "title": "End-of-life information",
+          "label_fr": "Information de fin de vie",
+          "description": "Information about waste prevention, separate collection, take-back, repurposing, recycling — per Article 74.",
+          "x-regulatory-source": "Article 74(1a)(1b)(1c)",
+          "x-data-access": "public",
+          "x-mandatory": true,
+          "required": ["end_user_role_text", "collection_take_back_info_url"],
+          "properties": {
+            "end_user_role_text": {
+              "type": "string",
+              "label_fr": "Rôle des utilisateurs finaux",
+              "description": "Plain-text description of end-user role in waste prevention and separate collection."
+            },
+            "collection_take_back_info_url": {
+              "type": "string",
+              "format": "uri",
+              "label_fr": "Information sur la collecte et la reprise"
+            }
+          }
+        }
+      }
+    },
+
+    "performance_durability": {
+      "type": "object",
+      "title": "Performance and durability",
+      "description": "Section 6.7 of Battery Pass guidance — Article 10 + Annex IV/VII via Annex XIII 1(g)(h)(i)(j)(k)(l)(m)(n)(o). Static fields below are mandatory; dynamic fields require BMS and apply per category.",
+      "properties": {
+        "rated_capacity_ah": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "title": "Rated capacity (Ah)",
+          "label_fr": "Capacité nominale (Ah)",
+          "x-regulatory-source": "Article 10(1); Annex IV Part A; Annex XIII 1(g)",
+          "x-data-access": "public",
+          "x-mandatory": true
+        },
+        "voltage_v": {
+          "type": "object",
+          "title": "Voltages",
+          "label_fr": "Tensions",
+          "description": "Minimal, nominal, and maximum voltage; with temperature ranges when relevant.",
+          "x-regulatory-source": "Article 10(1); Annex XIII 1(h)",
+          "x-data-access": "public",
+          "x-mandatory": true,
+          "required": ["nominal_v"],
+          "properties": {
+            "nominal_v": { "type": "number", "exclusiveMinimum": 0, "label_fr": "Tension nominale (V)" },
+            "min_v": { "type": "number", "exclusiveMinimum": 0, "label_fr": "Tension minimale (V)" },
+            "max_v": { "type": "number", "exclusiveMinimum": 0, "label_fr": "Tension maximale (V)" },
+            "temperature_range_c": {
+              "type": "object",
+              "label_fr": "Plage de température (°C)",
+              "properties": {
+                "min": { "type": "number" },
+                "max": { "type": "number" }
+              }
+            }
+          }
+        },
+        "original_power_capability_w": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "title": "Original power capability (W)",
+          "label_fr": "Puissance d'origine (W)",
+          "x-regulatory-source": "Annex XIII 1(i)",
+          "x-data-access": "public",
+          "x-mandatory": true
+        },
+        "expected_lifetime_cycles": {
+          "type": "object",
+          "title": "Expected battery lifetime (cycles)",
+          "label_fr": "Durée de vie attendue (cycles)",
+          "description": "Expected lifetime in cycles + the reference test used; calendar years also recommended.",
+          "x-regulatory-source": "Annex XIII 1(j); Article 10(1) + Annex IV",
+          "x-data-access": "public",
+          "x-mandatory": true,
+          "required": ["cycles", "reference_test"],
+          "properties": {
+            "cycles": { "type": "integer", "minimum": 1, "label_fr": "Nombre de cycles" },
+            "reference_test": { "type": "string", "label_fr": "Test de référence utilisé" },
+            "calendar_years": { "type": "number", "minimum": 0, "label_fr": "Années calendaires" },
+            "c_rate_of_test": { "type": "number", "label_fr": "Taux de C utilisé pour le test" }
+          }
+        },
+        "warranty_calendar_life": {
+          "type": "string",
+          "title": "Period for which the commercial warranty for the calendar life applies",
+          "label_fr": "Période de garantie commerciale pour la durée de vie calendaire",
+          "description": "Free-form description of warranty period.",
+          "x-regulatory-source": "Annex XIII 1(k)",
+          "x-data-access": "public",
+          "x-mandatory": false
+        },
+        "temperature_idle_state_c": {
+          "type": "object",
+          "title": "Temperature idle state range (°C)",
+          "label_fr": "Plage de température en repos (°C)",
+          "x-regulatory-source": "Annex XIII 1(l)",
+          "x-data-access": "public",
+          "x-mandatory": true,
+          "required": ["lower_c", "upper_c"],
+          "properties": {
+            "lower_c": { "type": "number", "label_fr": "Limite inférieure (°C)" },
+            "upper_c": { "type": "number", "label_fr": "Limite supérieure (°C)" }
+          }
+        },
+        "round_trip_efficiency_pct": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "title": "Initial round trip energy efficiency (%)",
+          "label_fr": "Rendement énergétique initial aller-retour (%)",
+          "x-regulatory-source": "Annex XIII 1(n)",
+          "x-data-access": "public",
+          "x-mandatory": true
+        },
+        "internal_resistance_ohm": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "title": "Internal battery resistance (cell & pack, Ohms)",
+          "label_fr": "Résistance interne (cellule et pack, Ohms)",
+          "x-regulatory-source": "Annex XIII 1(o)",
+          "x-data-access": "public",
+          "x-mandatory": true
+        },
+
+        "dynamic_state_of_health": {
+          "type": "object",
+          "title": "Dynamic battery state (BMS-equipped batteries only)",
+          "description": "Live state-of-health data per Article 14 + Annex VII. Updated by BMS during use phase. Battery Pass v1.1 categorizes these as 'dynamic' attributes.",
+          "x-regulatory-source": "Article 14; Annex VII; Annex XIII 4(a)(b)",
+          "x-data-access": "legitimate-interest",
+          "x-mandatory": false,
+          "x-bms-required": true,
+          "x-dynamic": true,
+          "properties": {
+            "state_of_charge_pct": { "type": "number", "minimum": 0, "maximum": 100, "label_fr": "État de charge (%)" },
+            "state_of_certified_energy_pct": { "type": "number", "minimum": 0, "maximum": 100, "label_fr": "État de l'énergie certifiée (%)" },
+            "remaining_capacity_ah": { "type": "number", "minimum": 0, "label_fr": "Capacité restante (Ah)" },
+            "capacity_fade_pct": { "type": "number", "minimum": 0, "maximum": 100, "label_fr": "Dégradation de capacité (%)" },
+            "power_fade_pct": { "type": "number", "minimum": 0, "maximum": 100, "label_fr": "Dégradation de puissance (%)" },
+            "internal_resistance_increase_pct": { "type": "number", "minimum": 0, "label_fr": "Augmentation de résistance interne (%)" },
+            "current_self_discharging_rate_pct_per_month": { "type": "number", "minimum": 0, "label_fr": "Taux d'auto-décharge actuel (%/mois)" },
+            "charge_discharge_cycles_count": { "type": "integer", "minimum": 0, "label_fr": "Nombre de cycles charge/décharge" },
+            "energy_throughput_kwh": { "type": "number", "minimum": 0, "label_fr": "Énergie cumulée échangée (kWh)" },
+            "extreme_temperature_exposure": {
+              "type": "object",
+              "label_fr": "Exposition aux températures extrêmes",
+              "properties": {
+                "time_charging_during_extreme_h": { "type": "number", "minimum": 0, "label_fr": "Temps de charge en températures extrêmes (h)" },
+                "time_in_extreme_h": { "type": "number", "minimum": 0, "label_fr": "Temps en températures extrêmes (h)" }
+              }
+            },
+            "accidents_count": { "type": "integer", "minimum": 0, "label_fr": "Nombre d'accidents" }
+          }
+        }
+      }
+    }
+  }
+}
