@@ -336,9 +336,9 @@
     "carbon_footprint": {
       "type": "object",
       "title": "Battery carbon footprint",
-      "description": "Section 6.3 of Battery Pass guidance — Article 7 + Annex II via Annex XIII 1(c). Required for EV batteries first, then industrial batteries > 2 kWh except those with exclusively external storage. NOT required for LMT batteries in the regulation timeline as of v1.1.",
-      "x-applicability": ["EV", "INDUSTRIAL_OVER_2KWH"],
-      "x-staged-application": "EV batteries: declaration from Feb 2025; performance class from Aug 2026; max threshold from Feb 2028. Industrial batteries: similar timeline shifted later. See Figure 16 in Battery Pass guidance v1.1.",
+      "description": "Section 6.3 of Battery Pass guidance — Article 7 + Annex II via Annex XIII 1(c). Article 7(1) text covers all three DPP-mandated categories — LMT, industrial > 2 kWh, and EV — but staged implementation acts apply different start dates per category. EV first, industrial second, stationary storage later. As of Battery Pass v1.1 (Dec 2023) the LMT-specific implementing act and start date had not yet been published; verify against the latest Commission delegated acts before treating CF as required for an LMT DPP.",
+      "x-applicability": ["EV", "INDUSTRIAL_OVER_2KWH", "INDUSTRIAL_STATIONARY_STORAGE_OVER_2KWH", "LMT"],
+      "x-staged-application": "EV batteries: declaration from Feb 2025; performance class from Aug 2026; max threshold from Feb 2028. Industrial > 2 kWh (non-storage): declaration from Aug 2026; performance class from Aug 2028. Stationary storage > 2 kWh: declaration from Aug 2030. LMT: in scope per Article 7(1) but implementing act + timeline TBD as of v1.1. See Figure 16 in Battery Pass guidance v1.1.",
       "properties": {
         "carbon_footprint_kg_co2e_per_kwh": {
           "type": "number",

@@ -85,12 +85,22 @@ Timeline (from Battery Pass Figure 16):
 
 | Measure | EV batteries | Industrial batteries > 2 kWh (non-storage) | Stationary storage > 2 kWh | LMT batteries |
 |---|---|---|---|---|
-| CF declaration | Feb 2025 | Aug 2026 | Aug 2030 | (not in current scope) |
-| CF performance class | Aug 2026 | Aug 2028 | Feb 2032 | (not in current scope) |
-| CF max threshold | Feb 2028 | Aug 2030 | (date 2033+) | (not in current scope) |
+| CF declaration | Feb 2025 | Aug 2026 | Aug 2030 | implementing act TBD |
+| CF performance class | Aug 2026 | Aug 2028 | Feb 2032 | implementing act TBD |
+| CF max threshold | Feb 2028 | Aug 2030 | (date 2033+) | implementing act TBD |
+
+**Important:** Article 7(1) text explicitly covers LMT batteries
+("rechargeable industrial batteries with a capacity above 2 kWh, light
+means of transport (LMT) batteries and electric vehicle (EV) batteries
+placed on the Union market"). LMT is therefore in legal scope, but as
+of Battery Pass v1.1 (Dec 2023) the Commission delegated act
+establishing the LMT-specific methodology and start dates had not yet
+been published. The compliance checker should treat CF as **applicable
+but not yet enforceable** for LMT until the implementing act lands.
 
 For EV batteries, the methodology follows the **JRC Rules for the
 calculation of the Carbon Footprint of Electric Vehicle Batteries (CFB-EV)**.
+For industrial batteries, see the JRC **CFB-IND** rules.
 
 | Field | Regulatory source | Access level | Mandatory |
 |---|---|---|---|
