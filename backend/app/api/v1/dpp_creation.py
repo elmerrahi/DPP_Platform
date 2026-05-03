@@ -1,29 +1,57 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
+from app.core.dpp_validator import validate_battery_dpp
 from app.core.security import get_current_user
 from app.db import models
 from app.db.session import get_db
-from app.schemas.dpp_schema import DPPCreate, DPPResponse
+from app.schemas.dpp_schema import (
+    DPPCreate,
+    DPPResponse,
+    DPPValidationErrorResponse,
+)
 
 router = APIRouter(prefix="/dpp", tags=["dpp"])
 
 
-@router.post("", response_model=DPPResponse, status_code=status.HTTP_201_CREATED)
+def _derive_listing_fields(payload: dict) -> tuple[str, str]:
+    """Extract the two denormalized columns we use for listings.
+
+    Both fields are guaranteed present because validation ran first.
+    """
+    general = payload["general_info"]
+    product_id = general["battery_passport_identification"]
+    product_name = general["battery_identification"]["model_identification"]
+    return product_name, product_id
+
+
+@router.post(
+    "",
+    response_model=DPPResponse,
+    status_code=status.HTTP_201_CREATED,
+    responses={422: {"model": DPPValidationErrorResponse}},
+)
 def create_dpp(
-    payload: DPPCreate,
+    body: DPPCreate,
     db: Session = Depends(get_db),
     user: models.User = Depends(get_current_user),
 ):
-    data_payload = payload.model_dump()
-    data_payload.pop("productName", None)
-    data_payload.pop("productId", None)
+    errors = validate_battery_dpp(body.payload)
+    if errors:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail={
+                "detail": "Battery DPP validation failed",
+                "errors": [e.to_dict() for e in errors],
+            },
+        )
 
+    product_name, product_id = _derive_listing_fields(body.payload)
     dpp = models.DPP(
         owner_id=user.id,
-        product_name=payload.productName,
-        product_id=payload.productId,
-        data=data_payload,
+        product_name=product_name,
+        product_id=product_id,
+        data=body.payload,
     )
     db.add(dpp)
     db.commit()
@@ -31,9 +59,9 @@ def create_dpp(
 
     return DPPResponse(
         id=dpp.id,
-        productName=dpp.product_name,
-        productId=dpp.product_id,
-        createdAt=dpp.created_at,
+        product_name=dpp.product_name,
+        product_id=dpp.product_id,
+        created_at=dpp.created_at,
         data=dpp.data,
     )
 
@@ -47,9 +75,9 @@ def list_dpps(
     return [
         DPPResponse(
             id=item.id,
-            productName=item.product_name,
-            productId=item.product_id,
-            createdAt=item.created_at,
+            product_name=item.product_name,
+            product_id=item.product_id,
+            created_at=item.created_at,
             data=item.data,
         )
         for item in dpps

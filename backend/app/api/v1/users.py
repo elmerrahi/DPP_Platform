@@ -37,9 +37,9 @@ def get_dashboard(
     recent_items = [
         DPPResponse(
             id=item.id,
-            productName=item.product_name,
-            productId=item.product_id,
-            createdAt=item.created_at,
+            product_name=item.product_name,
+            product_id=item.product_id,
+            created_at=item.created_at,
             data=item.data,
         )
         for item in recent

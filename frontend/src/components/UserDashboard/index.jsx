@@ -1,11 +1,23 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { getDashboard } from '../../utils/api.js';
 
 export default function UserDashboard() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const flashMessage = location.state?.flash ?? '';
   const [dashboard, setDashboard] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
+
+  // Clear the location state once we've shown the flash so a refresh
+  // doesn't re-display it.
+  useEffect(() => {
+    if (flashMessage) {
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -47,6 +59,7 @@ export default function UserDashboard() {
 
   return (
     <section className="dashboard">
+      {flashMessage && <div className="flash-success">{flashMessage}</div>}
       <div className="dashboard-header">
         <h2>Welcome back, {dashboard.user.name}</h2>
         <p>Your DPP workspace is ready to manage and audit passports.</p>
@@ -81,8 +94,8 @@ export default function UserDashboard() {
           recent.map((item) => (
             <div className="dashboard-item" key={item.id}>
               <div>
-                <h4>{item.productName}</h4>
-                <span>Product ID: {item.productId}</span>
+                <h4>{item.product_name}</h4>
+                <span>Product ID: {item.product_id}</span>
               </div>
               <span className="pill">Created</span>
             </div>

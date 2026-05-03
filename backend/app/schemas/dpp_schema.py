@@ -33,23 +33,43 @@ class AuthResponse(Token):
 
 
 class DPPCreate(BaseModel):
-    productName: str = Field(min_length=2, max_length=255)
-    productId: str = Field(min_length=2, max_length=120)
-    manufacturer: str = Field(min_length=2, max_length=255)
-    category: Optional[str] = None
-    origin: Optional[str] = None
-    materials: Optional[str] = None
-    lifecycleFootprint: Optional[str] = None
-    certifications: Optional[str] = None
-    extraData: Dict[str, Any] = Field(default_factory=dict)
+    """Battery DPP creation payload — validated against battery_dpp_schema.json.
+
+    Pydantic does only a minimal envelope check (must be a dict). The
+    structural and field-level validation lives in
+    `app.core.dpp_validator.validate_battery_dpp` and the JSON Schema it
+    loads. This separation keeps the schema as the single source of truth.
+    """
+
+    payload: Dict[str, Any] = Field(
+        ...,
+        description=(
+            "Full battery DPP document conforming to "
+            "battery_dpp_schema.json — see backend/app/schemas/."
+        ),
+    )
 
 
 class DPPResponse(BaseModel):
     id: UUID
-    productName: str
-    productId: str
-    createdAt: datetime
+    product_name: str = Field(
+        description="Derived from general_info.battery_identification.model_identification"
+    )
+    product_id: str = Field(
+        description="Derived from general_info.battery_passport_identification"
+    )
+    created_at: datetime
     data: Dict[str, Any]
+
+
+class DPPValidationErrorItem(BaseModel):
+    path: str
+    message: str
+
+
+class DPPValidationErrorResponse(BaseModel):
+    detail: str = "Battery DPP validation failed"
+    errors: list[DPPValidationErrorItem]
 
 
 class AuditResponse(BaseModel):

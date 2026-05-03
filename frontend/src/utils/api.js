@@ -1,5 +1,13 @@
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000/api/v1';
 
+class ApiError extends Error {
+  constructor(message, status, body) {
+    super(message);
+    this.status = status;
+    this.body = body;
+  }
+}
+
 async function request(path, options = {}) {
   const token = localStorage.getItem('dpp_token');
   const headers = {
@@ -17,7 +25,19 @@ async function request(path, options = {}) {
   });
 
   if (!response.ok) {
-    throw new Error(`Request failed: ${response.status}`);
+    // Parse the body if it claims to be JSON so callers can show
+    // structured errors (e.g. our 422 validation report).
+    let body;
+    try {
+      body = await response.json();
+    } catch {
+      body = null;
+    }
+    throw new ApiError(
+      `Request failed: ${response.status}`,
+      response.status,
+      body
+    );
   }
 
   return response.json();
@@ -56,7 +76,17 @@ export async function auditDpp(file) {
   });
 
   if (!response.ok) {
-    throw new Error(`Request failed: ${response.status}`);
+    let body;
+    try {
+      body = await response.json();
+    } catch {
+      body = null;
+    }
+    throw new ApiError(
+      `Request failed: ${response.status}`,
+      response.status,
+      body
+    );
   }
 
   return response.json();
@@ -69,3 +99,5 @@ export function getProfile() {
 export function getDashboard() {
   return request('/users/dashboard');
 }
+
+export { ApiError };
