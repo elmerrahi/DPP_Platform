@@ -1,0 +1,35 @@
+{
+  "general_info": {
+    "battery_passport_identification": "BAT-IND-FR-2026-000002",
+    "battery_identification": {
+      "model_identification": "IndustrialPack-50",
+      "batch_number": "BATCH-2026-Q2"
+    },
+    "manufacturer_identification": {
+      "name": "Stockage Industriel SAS",
+      "trade_name": "StockIndus",
+      "postal_address": "45 Avenue de l'Énergie, 69001 Lyon, France",
+      "web_address": "https://stockindus.example.com",
+      "email": "contact@stockindus.example.com"
+    },
+    "manufacturing_place": {
+      "country": "FR",
+      "city": "Lyon",
+      "street": "45 Avenue de l'Énergie"
+    },
+    "manufacturing_date": "2026-03",
+    "battery_category": "INDUSTRIAL_OVER_2KWH",
+    "battery_weight": {
+      "total_kg": 250.0
+    },
+    "battery_status": "Original"
+  },
+  "compliance": {
+    "separate_collection_symbol_displayed": true,
+    "labels_meaning": "Symboles de la batterie : collecte séparée (poubelle barrée), classe de performance carbone.",
+    "eu_declaration_of_conformity_id": "EU-DOC-2026-IND-000002"
+  },
+  "supply_chain_due_diligence": {
+    "due_diligence_report_url": "https://stockindus.example.com/compliance/dd-2026.pdf"
+  }
+}

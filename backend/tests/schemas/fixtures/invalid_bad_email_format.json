@@ -1,0 +1,31 @@
+{
+  "general_info": {
+    "battery_passport_identification": "BAT-EV-DE-2026-000103",
+    "battery_identification": {
+      "model_identification": "EV-Pack-100kWh",
+      "serial_number": "SN-2026-EV-000103"
+    },
+    "manufacturer_identification": {
+      "name": "Greenwheel GmbH",
+      "postal_address": "100 Berliner Strasse, 10115 Berlin, Germany",
+      "email": "not-an-email-address"
+    },
+    "manufacturing_place": {
+      "country": "DE"
+    },
+    "manufacturing_date": "2026-02",
+    "battery_category": "EV",
+    "battery_weight": {
+      "total_kg": 480.5
+    },
+    "battery_status": "Original"
+  },
+  "compliance": {
+    "separate_collection_symbol_displayed": true,
+    "labels_meaning": "Battery labels include the separate collection symbol.",
+    "eu_declaration_of_conformity_id": "EU-DOC-2026-EV-000103"
+  },
+  "supply_chain_due_diligence": {
+    "due_diligence_report_url": "https://greenwheel.example.com/compliance/dd-103.pdf"
+  }
+}

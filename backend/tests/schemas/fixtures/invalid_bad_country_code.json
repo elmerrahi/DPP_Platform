@@ -1,0 +1,30 @@
+{
+  "general_info": {
+    "battery_passport_identification": "BAT-LMT-FRA-2026-000102",
+    "battery_identification": {
+      "model_identification": "VeloCity-X1",
+      "serial_number": "SN-2026-000102"
+    },
+    "manufacturer_identification": {
+      "name": "Vélo Manufacturer SAS",
+      "postal_address": "12 Rue de la Batterie, 75001 Paris, France"
+    },
+    "manufacturing_place": {
+      "country": "FRA"
+    },
+    "manufacturing_date": "2026-04",
+    "battery_category": "LMT",
+    "battery_weight": {
+      "total_kg": 2.5
+    },
+    "battery_status": "Original"
+  },
+  "compliance": {
+    "separate_collection_symbol_displayed": true,
+    "labels_meaning": "Symbole de collecte séparée.",
+    "eu_declaration_of_conformity_id": "EU-DOC-2026-LMT-000102"
+  },
+  "supply_chain_due_diligence": {
+    "due_diligence_report_url": "https://example.com/due-diligence/2026/lmt-102.pdf"
+  }
+}
