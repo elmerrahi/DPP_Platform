@@ -1,4 +1,4 @@
-Project Stage Log - DPP Platform
+Project Functionality Index - DPP Platform
 
 Quick Access Commands (share with the team)
 - Frontend dev server:
@@ -16,32 +16,131 @@ Quick Access Commands (share with the team)
   - cd backend
   - python scripts/seed_user.py --email test@test.com --password test1234
 
-[2026-01-21 13:43] Frontend scaffolding completed
-- Created Vite + React setup (package.json, vite.config.js, index.html, src/main.jsx)
-- Added routing in src/App.jsx for landing, sign-in, sign-up, dashboard, DPP create, audit
-- Built UI components in src/components (Header, Footer, LandingPage, SignInForm, SignUpForm, DppForm, AuditResults, UserDashboard)
-- Added pages in src/pages to wrap each component
-- Implemented API helper in src/utils/api.js for auth, DPP creation, audit upload
-- Created stylesheets in src/styles for main theme, landing layout, forms, and buttons
-- Applied branding copy for Yonk AI Leaders and Bicep across landing and auth
+Backend (FastAPI)
 
-[2026-01-21 13:43] Backend scaffolding completed
-- Created FastAPI app entry in backend/app/main.py with CORS and health endpoint
-- Added JWT security helpers in backend/app/core/security.py
-- Added config defaults in backend/app/core/config.py
-- Added SQLAlchemy base/session in backend/app/db/base.py and backend/app/db/session.py
-- Added database models in backend/app/db/models.py for User + DPP with JSONB payload
-- Added Pydantic schemas in backend/app/schemas/dpp_schema.py
-- Added auth routes in backend/app/api/v1/auth.py (register, login)
-- Added DPP routes in backend/app/api/v1/dpp_creation.py (create, list)
-- Added audit route in backend/app/api/v1/audit.py (file upload)
-- Added AI placeholders in backend/ai/models (compliance_model.py, transformer_model.py)
-- Added basic test in backend/tests/test_dpp.py for health check
-- Added requirements in backend/requirements.txt
-- Created package __init__.py files for module discovery
+- backend/app/main.py
+  - startup_event(): Initializes the database schema on app startup.
+  - health_check(): Health endpoint returning {"status": "ok"}.
+  - app.include_router(...): Registers auth, dpp, audit, users, admin routers.
 
-[2026-01-21 13:43] Documentation updated
-- Extended README.md with project structure and run instructions for frontend/back-end
+- backend/app/core/security.py
+  - get_password_hash(password): Hashes user passwords with bcrypt.
+  - verify_password(plain_password, hashed_password): Validates password vs hash.
+  - create_access_token(subject, expires_delta): Issues JWT access tokens.
+  - get_current_user(token, db): Validates JWT, loads the user from DB.
 
-[2026-01-21 13:43] Backend import fix
-- Updated audit route import to use top-level ai package path
+- backend/app/core/admin.py
+  - require_admin(x_admin_token): Guards admin routes via X-Admin-Token header.
+
+- backend/app/db/session.py
+  - get_db(): Yields a SQLAlchemy session and closes it after use.
+
+- backend/app/db/init_db.py
+  - init_db(): Creates DB tables from SQLAlchemy metadata.
+
+- backend/app/api/v1/auth.py
+  - register(payload, db): Creates a user and returns auth token + profile.
+  - login(payload, db): Validates credentials and returns auth token + profile.
+
+- backend/app/api/v1/dpp_creation.py
+  - create_dpp(payload, db, user): Creates a DPP for the current user.
+  - list_dpps(db, user): Lists DPPs owned by the current user.
+
+- backend/app/api/v1/audit.py
+  - audit_dpp(file, user): Scores an uploaded DPP file with AI placeholder.
+
+- backend/app/api/v1/users.py
+  - get_me(user): Returns the current user profile.
+  - get_dashboard(db, user): Returns DPP count and recent DPPs for dashboard.
+
+- backend/app/api/v1/admin.py
+  - list_users(db): Lists all users (admin token required).
+
+- backend/ai/models/compliance_model.py
+  - score_compliance(dpp_payload): Mock compliance scoring response.
+
+- backend/ai/models/transformer_model.py
+  - run_transformer_insights(dpp_payload): Mock transformer enrichment response.
+
+- backend/scripts/seed_user.py
+  - seed_user(name, email, password): Creates or updates a test user.
+  - main(): CLI entry for seed_user arguments.
+
+- backend/tests/test_dpp.py
+  - test_health_check(): Confirms /health responds with status ok.
+
+Frontend (React + Vite)
+
+- frontend/src/main.jsx
+  - ReactDOM.createRoot(...).render(): Renders the App root and global styles.
+
+- frontend/src/App.jsx
+  - App(): App shell, routes, and protected pages.
+
+- frontend/src/utils/api.js
+  - request(path, options): Fetch wrapper with token and JSON handling.
+  - signIn(payload): POST /auth/login for user login.
+  - signUp(payload): POST /auth/register for user registration.
+  - createDpp(payload): POST /dpp to create a passport.
+  - auditDpp(file): POST /audit to upload and score a passport file.
+  - getProfile(): GET /users/me for profile info.
+  - getDashboard(): GET /users/dashboard for counts and recent DPPs.
+
+- frontend/src/utils/auth.js
+  - isAuthenticated(): Returns true if dpp_token is in localStorage.
+
+- frontend/src/components/Header/index.jsx
+  - Header(): Top navigation with brand and sign-in link.
+
+- frontend/src/components/Footer/index.jsx
+  - Footer(): Footer with mission and compliance tags.
+
+- frontend/src/components/LandingPage/index.jsx
+  - LandingPage(): Marketing hero, SDG strip, chatbot UI, and CTA.
+  - handleChatSubmit(event): Adds a user message and canned response.
+
+- frontend/src/components/SignInForm/index.jsx
+  - SignInForm(): Login form with API call and localStorage persistence.
+  - handleChange(event): Updates form state.
+  - handleSubmit(event): Calls signIn and navigates to /dashboard.
+
+- frontend/src/components/SignUpForm/index.jsx
+  - SignUpForm(): Registration form with API call and localStorage persistence.
+  - handleChange(event): Updates form state.
+  - handleSubmit(event): Calls signUp and navigates to /dashboard.
+
+- frontend/src/components/UserDashboard/index.jsx
+  - UserDashboard(): Loads dashboard data and shows recent DPPs.
+
+- frontend/src/components/DppForm/index.jsx
+  - DppForm(): DPP creation form for structured fields.
+  - handleChange(event): Updates form state.
+  - handleSubmit(event): Calls createDpp and resets form.
+
+- frontend/src/components/AuditResults/index.jsx
+  - AuditResults(): Upload form + audit results panel.
+  - handleSubmit(event): Calls auditDpp and displays results.
+
+- frontend/src/components/ProtectedRoute/index.jsx
+  - ProtectedRoute({ children }): Redirects to /signin if not authenticated.
+
+- frontend/src/pages/index.jsx
+  - Landing(): Page wrapper for LandingPage.
+
+- frontend/src/pages/auth-choice.jsx
+  - AuthChoice(): Side-by-side SignUp and SignIn forms.
+
+- frontend/src/pages/signin.jsx
+  - SignIn(): Page wrapper for SignInForm.
+
+- frontend/src/pages/signup.jsx
+  - SignUp(): Page wrapper for SignUpForm.
+
+- frontend/src/pages/user-dashboard.jsx
+  - Dashboard(): Page wrapper for UserDashboard.
+
+- frontend/src/pages/dpp-create.jsx
+  - CreateDpp(): Page wrapper for DppForm.
+
+- frontend/src/pages/audit.jsx
+  - AuditPage(): Page wrapper for AuditResults.

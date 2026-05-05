@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function LandingPage() {
   const [messages, setMessages] = useState([
@@ -9,6 +9,7 @@ export default function LandingPage() {
     }
   ]);
   const [input, setInput] = useState('');
+  const messagesRef = useRef(null);
 
   const sdgItems = [
     { id: 'sdg-12', label: 'SDG 12', title: 'Responsible Consumption' },
@@ -16,26 +17,66 @@ export default function LandingPage() {
     { id: 'sdg-13', label: 'SDG 13', title: 'Climate Action' }
   ];
 
-  const quickAnswers = [
+  const faqItems = [
     {
-      match: ['what is a dpp', 'what is dpp', 'define dpp'],
-      response:
-        'A Digital Product Passport is a structured record of a product’s materials, origin, lifecycle, and compliance data.'
+      id: 'espr-definition',
+      question: 'What is the Ecodesign for Sustainable Products Regulation (ESPR)?',
+      answer:
+        'The Ecodesign for Sustainable Products Regulation (ESPR) is an EU regulation that improves product sustainability by requiring durability, repairability, recyclability, and energy efficiency across the full lifecycle.'
     },
     {
-      match: ['espr', 'regulation', 'eu'],
-      response:
-        'DPPs support ESPR compliance by keeping product data auditable and traceable across the lifecycle.'
+      id: 'espr-objectives',
+      question: 'What are the main objectives of ESPR?',
+      answer:
+        'ESPR aims to reduce lifecycle environmental impact, improve durability and recyclability, prevent planned obsolescence, and boost transparency for circular economy practices.'
     },
     {
-      match: ['benefits', 'why'],
-      response:
-        'DPPs improve transparency, enable faster audits, and help prove sustainability claims.'
+      id: 'dpp-definition',
+      question: 'What is a Digital Product Passport (DPP)?',
+      answer:
+        'A Digital Product Passport (DPP) is a standardized digital record describing a product\'s sustainability, composition, and lifecycle data, accessible via a QR code or identifier.'
     },
     {
-      match: ['data', 'fields'],
-      response:
-        'Typical fields include materials, origin, certifications, repairability, and lifecycle footprint.'
+      id: 'dpp-espr',
+      question: 'How does the Digital Product Passport support the goals of ESPR?',
+      answer:
+        'DPPs translate ESPR requirements into actionable data, enabling compliance monitoring, informed choices, repairability, recycling, and supply-chain transparency.'
+    },
+    {
+      id: 'dpp-info',
+      question: 'What types of information must be included in a Digital Product Passport?',
+      answer:
+        'Depending on the product, a DPP may include identification, materials, environmental footprint, repairability, spare parts, certifications, and end-of-life guidance.'
+    },
+    {
+      id: 'dpp-owner',
+      question: 'Who is responsible for creating and maintaining a Digital Product Passport?',
+      answer:
+        'Manufacturers are primarily responsible, with importers and distributors sharing obligations depending on supply-chain roles.'
+    },
+    {
+      id: 'dpp-access',
+      question: 'Who can access Digital Product Passport data, and for what purposes?',
+      answer:
+        'Consumers, regulators, repairers, recyclers, and manufacturers access DPP data for purchasing, compliance, repair, recycling, and design optimization; access levels vary by sensitivity.'
+    },
+    {
+      id: 'dpp-governance',
+      question: 'What are the main data governance challenges associated with DPPs?',
+      answer:
+        'Key challenges include data accuracy, access control, interoperability, security of sensitive data, and lifecycle data maintenance.'
+    },
+    {
+      id: 'dpp-circular',
+      question: 'How do Digital Product Passports support the circular economy?',
+      answer:
+        'DPPs improve traceability and reuse, enable repair and recycling, and reduce waste by making lifecycle data accessible.'
+    },
+    {
+      id: 'dpp-importance',
+      question: 'Why are ESPR and DPPs important for sustainable and compliant markets?',
+      answer:
+        'They make sustainability enforceable through transparent, auditable data, promoting accountability, compliance, and circularity across the EU market.'
     }
   ];
 
@@ -46,11 +87,12 @@ export default function LandingPage() {
       return;
     }
     const lower = trimmed.toLowerCase();
-    const matched = quickAnswers.find((answer) =>
-      answer.match.some((term) => lower.includes(term))
-    );
+    const matched = faqItems.find((item) => {
+      const question = item.question.toLowerCase();
+      return question === lower || question.includes(lower) || lower.includes(question);
+    });
     const reply =
-      matched?.response ||
+      matched?.answer ||
       'Great question. DPPs capture compliance and sustainability data so products can be verified throughout their lifecycle.';
 
     setMessages((prev) => [
@@ -60,6 +102,25 @@ export default function LandingPage() {
     ]);
     setInput('');
   };
+
+  const handleSuggestionClick = (question) => {
+    const matched = faqItems.find((item) => item.question === question);
+    if (!matched) {
+      return;
+    }
+    setMessages((prev) => [
+      ...prev,
+      { role: 'user', text: matched.question },
+      { role: 'bot', text: matched.answer }
+    ]);
+  };
+
+  useEffect(() => {
+    if (!messagesRef.current) {
+      return;
+    }
+    messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
+  }, [messages]);
 
   return (
     <section className="landing">
@@ -114,19 +175,42 @@ export default function LandingPage() {
           <div className="chatbot-panel">
             <div className="chatbot-header">
               <h3>DPP Assistant</h3>
-              <span className="pill">Ask about DPPs</span>
+              <span className="pill">
+                <span className="status-dot" />
+                Live guidance
+              </span>
             </div>
-            <div className="chatbot-messages">
+            <div className="chatbot-messages" ref={messagesRef}>
               {messages.map((message, index) => (
-                <div key={`${message.role}-${index}`} className={`chatbot-bubble ${message.role}`}>
+                <div
+                  key={`${message.role}-${index}`}
+                  className={`chatbot-bubble ${message.role}`}
+                  style={{ animationDelay: `${index * 0.06}s` }}
+                >
                   {message.text}
                 </div>
               ))}
             </div>
+            <div className="chatbot-suggestions">
+              <p>Try one of these:</p>
+              <div className="suggestion-grid">
+                {faqItems.map((item, index) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    className="suggestion-chip"
+                    onClick={() => handleSuggestionClick(item.question)}
+                    style={{ animationDelay: `${index * 0.05}s` }}
+                  >
+                    {item.question}
+                  </button>
+                ))}
+              </div>
+            </div>
             <form className="chatbot-form" onSubmit={handleChatSubmit}>
               <input
                 type="text"
-                placeholder="Ask about ESPR, SDGs, or DPP data..."
+                placeholder="Ask about ESPR, DPPs, and compliance..."
                 value={input}
                 onChange={(event) => setInput(event.target.value)}
               />

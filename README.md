@@ -76,7 +76,7 @@ pip install -r requirements.txt (first time only )
 
 docker compose up -d db
 cd backend
-.venv\\Scripts\\activate
+.venv\\Scripts\\activacd te
 uvicorn app.main:app --reload
 ```
 
