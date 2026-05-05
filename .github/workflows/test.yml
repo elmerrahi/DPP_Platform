@@ -1,0 +1,38 @@
+name: tests
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# Workflow uses no untrusted inputs (no github.event.*.title / .body / .ref
+# interpolations in `run:` commands), so it is not vulnerable to the
+# command-injection class of attacks. All inputs are static or come from
+# trusted setup actions.
+
+jobs:
+  backend-tests:
+    name: backend pytest (Python 3.12)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run pytest
+        run: pytest -v

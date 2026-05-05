@@ -1,0 +1,49 @@
+{
+  "general_info": {
+    "battery_passport_identification": "BAT-EV-DE-2026-000003",
+    "battery_identification": {
+      "model_identification": "EV-Pack-100kWh",
+      "serial_number": "SN-2026-EV-000003",
+      "product_number": "PN-EV-100"
+    },
+    "manufacturer_identification": {
+      "name": "Greenwheel GmbH",
+      "trade_name": "Greenwheel",
+      "postal_address": "100 Berliner Strasse, 10115 Berlin, Germany",
+      "web_address": "https://greenwheel.example.com",
+      "email": "compliance@greenwheel.example.com",
+      "unique_operator_identifier": "GLN-1234567890123"
+    },
+    "manufacturing_place": {
+      "country": "DE",
+      "city": "Berlin",
+      "unique_facility_identifier": "GLN-9876543210987"
+    },
+    "manufacturing_date": "2026-02",
+    "battery_category": "EV",
+    "battery_weight": {
+      "total_kg": 480.5,
+      "module_kg": 60.0
+    },
+    "battery_status": "Original"
+  },
+  "compliance": {
+    "separate_collection_symbol_displayed": true,
+    "cadmium_symbol_required": false,
+    "lead_symbol_required": false,
+    "labels_meaning": "Battery labels include the separate collection symbol and EU CE marking.",
+    "eu_declaration_of_conformity_id": "EU-DOC-2026-EV-000003",
+    "eu_declaration_of_conformity_url": "https://greenwheel.example.com/compliance/eu-doc-2026-ev-000003.pdf"
+  },
+  "supply_chain_due_diligence": {
+    "due_diligence_report_url": "https://greenwheel.example.com/compliance/dd-report-2026.pdf",
+    "third_party_assurances": [
+      {
+        "scheme_name": "Responsible Cobalt Initiative",
+        "certificate_url": "https://greenwheel.example.com/compliance/rci-cert.pdf",
+        "valid_from": "2026-01-01",
+        "valid_until": "2027-01-01"
+      }
+    ]
+  }
+}
